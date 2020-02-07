@@ -16,6 +16,18 @@ logger = logging.getLogger(__name__)
 
 class Trytond(object):
 
+    config_options = [
+        ('connection_type', 'trytond'),
+        ('config_file', None),
+        ('database', None),
+        ('host', None),
+        ('activate_modules', None),
+        ('password', None),
+        ('port', 8000),
+        ('ssl_context', None),
+        ('user', 'admin'),
+        ]
+
     def __init__(self, connection_type, **kwargs):
         method = getattr(self, '_init_{}_connection'.format(connection_type))
         try:
@@ -39,6 +51,22 @@ class Trytond(object):
                 user=quote(user), password=quote(password), host=host,
                 port=int(port), database=quote(database)),
             context=ssl_context)
+
+    @classmethod
+    def add_config_values(cls, app):
+        for name, default in cls.config_options:
+            app.add_config_value(
+                'trytond_{opt}'.format(opt=name), default, 'env')
+
+    @classmethod
+    def get_config(cls, config):
+        result = {
+            n: getattr(config, 'trytond_{opt}'.format(opt=n), v)
+            for n, v in cls.config_options}
+        if result.get('database') is None:
+            default_databases = {'trytond': ':memory:', 'xmlrpc': 'tryton'}
+            result['database'] = default_databases[result['connection_type']]
+        return result
 
     @classmethod
     def initialise_database(cls, database):
@@ -214,39 +242,11 @@ class Trytond(object):
         return getattr(wizard, property, None)
 
 
-_config_options = [
-    ('connection_type', 'trytond'),
-    ('config_file', None),
-    ('database', None),
-    ('host', None),
-    ('activate_modules', None),
-    ('password', None),
-    ('port', 8000),
-    ('ssl_context', None),
-    ('user', 'admin'),
-    ]
-
-
-def trytond_add_config_values(app):
-    for name, default in _config_options:
-        app.add_config_value('trytond_{opt}'.format(opt=name), default, 'env')
-
-
-def trytond_config_values(config):
-    values = {
-        n: getattr(config, 'trytond_{opt}'.format(opt=n), v)
-        for n, v in _config_options}
-    if values.get('database') is None:
-        default_databases = {'trytond': ':memory:', 'xmlrpc': 'tryton'}
-        values['database'] = default_databases[values['connection_type']]
-    return values
-
-
 def initialise_trytond(app, config):
     if getattr(app, 'trytond', None):
         return
 
-    trytond_config = trytond_config_values(config)
+    trytond_config = Trytond.get_config(config)
     activate_modules = trytond_config.get('activate_modules')
     if activate_modules is not None:
         try:

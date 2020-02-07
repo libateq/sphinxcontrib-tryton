@@ -5,6 +5,8 @@ from sphinx_testing import with_app
 from unittest import TestCase
 from unittest.mock import patch
 
+from sphinxcontrib.tryton.trytond import Trytond
+
 
 def with_basic_app(warnings=''):
     return with_app(
@@ -16,6 +18,10 @@ def with_basic_app(warnings=''):
 class MockTrytond(object):
     def __init__(self, **kwargs):
         pass
+
+    @classmethod
+    def get_config(cls, config):
+        return Trytond.get_config(config)
 
     def get_property(self, type_, name, property=None):
         return (property or name).title()

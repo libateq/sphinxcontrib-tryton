@@ -5,6 +5,8 @@ from sphinx_testing import with_app
 from unittest import TestCase
 from unittest.mock import patch
 
+from sphinxcontrib.tryton.trytond import Trytond
+
 
 def with_basic_app(*args, **kwargs):
     kwargs.pop('srcdir', None)
@@ -16,6 +18,10 @@ def with_basic_app(*args, **kwargs):
 class MockTrytond(object):
     def __init__(self, **kwargs):
         pass
+
+    @classmethod
+    def get_config(cls, config):
+        return Trytond.get_config(config)
 
 
 class TestTrytondBuilders(TestCase):

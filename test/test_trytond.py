@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 from sphinx_testing import with_app
 
 from sphinxcontrib.tryton.inherit import inherit_modules
-from sphinxcontrib.tryton.trytond import Trytond, trytond_config_values
+from sphinxcontrib.tryton.trytond import Trytond
 
 try:
     import trytond
@@ -103,7 +103,7 @@ class TestTrytondDatabase(TestCase):
         self.assertIn('sale_stock_quantity', modules)
         self.assertIn('stock_lot_sled', modules)
 
-        trytond = Trytond(**trytond_config_values(app.config))
+        trytond = Trytond(**Trytond.get_config(app.config))
         for module in modules:
             record = trytond.get_record('ir.module', [('name', '=', module)])
             module_index = modules.index(module)

@@ -4,7 +4,7 @@
 from .client_sao import ClientSao
 from .client_tryton import ClientTryton
 from .domain import TrytonDomain, cleanup_stop_clients, cleanup_temp_figures
-from .trytond import setup_env, initialise_trytond, trytond_add_config_values
+from .trytond import Trytond, setup_env, initialise_trytond
 
 version = '0.1.0'
 
@@ -12,7 +12,7 @@ version = '0.1.0'
 def setup(app):
     ClientSao.add_config_values(app)
     ClientTryton.add_config_values(app)
-    trytond_add_config_values(app)
+    Trytond.add_config_values(app)
 
     app.connect('config-inited', initialise_trytond)
     app.connect('env-before-read-docs', setup_env)
