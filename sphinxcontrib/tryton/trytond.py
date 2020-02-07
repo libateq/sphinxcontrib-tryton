@@ -6,6 +6,7 @@ from os import environ
 from proteus import Model, Wizard, config as proteus_config
 from sphinx.util import logging
 from urllib.parse import quote
+from warnings import catch_warnings, filterwarnings
 
 from .exception import (
     DatabaseAlreadyExistsError, DatabaseInitialisationFailedError)
@@ -52,7 +53,9 @@ class Trytond(object):
             raise DatabaseAlreadyExistsError
 
         try:
-            create_db(database)
+            with catch_warnings():
+                filterwarnings(action='ignore', module=r'trytond.*sqlite.*')
+                create_db(database)
         except Exception as err:
             raise DatabaseInitialisationFailedError(err.msg)
 
