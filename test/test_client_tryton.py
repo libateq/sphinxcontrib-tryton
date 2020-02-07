@@ -38,7 +38,8 @@ class TestClientTryton(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.tryton.stop()
+        with skip_warningiserror():
+            cls.tryton.stop()
         rmtree(cls.temp_dir, ignore_errors=True)
 
     def assertApplyInGtkThread(self, func):
