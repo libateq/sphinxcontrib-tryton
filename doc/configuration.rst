@@ -44,6 +44,11 @@ connections.
 
 .. _trytond-user:
 
+**trytond_database**
+    The name of the database to connect to on the Tryton server.
+    This defaults to ``tryton`` for remote connections and ``:memory:`` for
+    local connections.
+
 **trytond_user**
     The login name for the user to connect as, this defaults to '``admin``'.
 
@@ -59,11 +64,13 @@ servers.
     connection will fallback to using the value from the ``TRYTOND_CONFIG``
     environment variable instead.
 
-**trytond_database_uri**
-    The uri for the database to connect to.  This defaults to
-    '``sqlite:///:memory:``' which creates an in memory sqlite database.
-    If this value is not set then the value from the ``TRYTOND_DATABASE_URI``
-    environment variable will be used.
+    .. note::
+
+        As normal with the Tryton server, the configuration values can be set
+        using environment variables instead.  See the `Tryton Documentation`_
+        for more details.
+
+        .. _`Tryton Documentation`: https://docs.tryton.org/projects/server/en/latest/topics/configuration.html
 
 **trytond_modules**
     A list of modules that should be activated in a new database.  If this
@@ -80,10 +87,6 @@ Remote Server Connection Options
 
 These connection options are only used when connecting to a remote trytond
 server.
-
-**trytond_database**
-    The name of the database to connect to on the Tryton server.  This value
-    is required for remote connections.
 
 **trytond_host**
     The hostname of the server that is running the Tryton server.  This value

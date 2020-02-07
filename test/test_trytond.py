@@ -123,7 +123,7 @@ class TestTrytondInit(TestCase):
         "Test proteus.config.set_trytond is called correctly."
         Trytond(
             connection_type='trytond', config_file='config_file',
-            database_uri='database', modules=None, user='user')
+            database='database', modules=None, user='user')
 
         self.proteus_config.set_trytond.assert_called_once_with(
             config_file='config_file', database='database', user='user')
@@ -146,7 +146,7 @@ class TestTrytondGetRecord(TestCase):
         with patch('sphinxcontrib.tryton.trytond.proteus_config'):
             self.trytond = Trytond(
                 connection_type='trytond', config_file='config_file',
-                database_uri='database', modules=None, user='user')
+                database='database', modules=None, user='user')
 
         trytond_model_patcher = patch('sphinxcontrib.tryton.trytond.Model')
         self.Model = trytond_model_patcher.start()
@@ -191,7 +191,7 @@ class TestTrytondGetProperty(TestCase):
         with patch('sphinxcontrib.tryton.trytond.proteus_config'):
             self.trytond = Trytond(
                 connection_type='trytond', config_file='config_file',
-                database_uri='database', modules=None, user='user')
+                database='database', modules=None, user='user')
 
         get_record_patcher = patch.object(
             self.trytond, 'get_record', self._get_record)
@@ -260,7 +260,7 @@ class TestTrytondGetOther(TestCase):
         with patch('sphinxcontrib.tryton.trytond.proteus_config'):
             self.trytond = Trytond(
                 connection_type='trytond', config_file='config_file',
-                database_uri='database', modules=None, user='user')
+                database='database', modules=None, user='user')
 
     def test_get_main_menu_item_path(self):
         "Test get_main_menu_item_path returns a list of record ids."

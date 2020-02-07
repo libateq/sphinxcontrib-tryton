@@ -21,23 +21,21 @@ class Trytond(object):
                 "could not connect to Trytond server: {err}".format(
                     err=repr(err)))
 
-    def _init_trytond_connection(self, user, database_uri, config_file,
+    def _init_trytond_connection(self, user, config_file, database=':memory:',
                                  modules=None, **kwargs):
         if modules is not None:
-            database_name = self._get_database_name(database_uri)
-
-            environ['DB_NAME'] = database_name
+            environ['DB_NAME'] = database
             from trytond.tests.test_tryton import db_exist, create_db
 
-            if db_exist(database_name):
+            if db_exist(database):
                 modules = None
                 logger.warning(
                     "database already exists - skipping module activation")
             else:
-                create_db(database_name)
+                create_db(database)
 
         proteus_config.set_trytond(
-            database=database_uri,
+            database=database,
             user=user,
             config_file=config_file)
 
@@ -56,7 +54,7 @@ class Trytond(object):
                 record.click('activate')
             Wizard('ir.module.activate_upgrade').execute('upgrade')
 
-    def _init_xmlrpc_connection(self, host, user, password, database,
+    def _init_xmlrpc_connection(self, host, user, password, database='tryton',
                                 ssl_context=None, port=8000, modules=None,
                                 **kwargs):
         if modules is not None:
@@ -207,26 +205,10 @@ class Trytond(object):
             ('wiz_name', '=', wiz_name)])
         return getattr(wizard, property, None)
 
-    @staticmethod
-    def _get_database_name(database_uri):
-        if not database_uri:
-            database_uri = environ.get('TRYTOND_DATABASE_URI')
-
-        database_name = None
-        if database_uri:
-            uri = urlparse(database_uri)
-            database_name = uri.path.strip('/')
-
-        if not database_name:
-            database_name = environ['DB_NAME']
-
-        return database_name
-
 
 _config_options = [
     ('connection_type', 'trytond'),
     ('config_file', None),
-    ('database_uri', 'sqlite:///:memory:'),
     ('database', None),
     ('host', None),
     ('modules', None),
@@ -243,9 +225,13 @@ def trytond_add_config_values(app):
 
 
 def trytond_config_values(config):
-    return {
+    values = {
         n: getattr(config, 'trytond_{opt}'.format(opt=n), v)
         for n, v in _config_options}
+    if values.get('database') is None:
+        default_databases = {'trytond': ':memory:', 'xmlrpc': 'tryton'}
+        values['database'] = default_databases[values['connection_type']]
+    return values
 
 
 def initialise_trytond(app, env, docnames):
