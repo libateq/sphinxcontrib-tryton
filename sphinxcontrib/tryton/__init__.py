@@ -6,7 +6,7 @@ from .client_tryton import ClientTryton
 from .domain import TrytonDomain, cleanup_stop_clients, cleanup_temp_figures
 from .trytond import Trytond, setup_env, initialise_trytond
 
-version = '0.1.0'
+version = '0.1.1'
 
 
 def setup(app):
