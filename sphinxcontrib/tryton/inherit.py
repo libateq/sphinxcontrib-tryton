@@ -3,7 +3,7 @@
 # repository for full copyright notices, license terms and support information.
 from sphinx.util import logging, progress_message
 
-from .trytond import Trytond, trytond_config_values
+from .trytond import initialise_trytond
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +18,8 @@ def inherit_modules(app, config, state='activated'):
 
     try:
         with progress_message(message):
-            trytond = Trytond(**trytond_config_values(config))
-            modules = trytond.get_modules(domain)
+            initialise_trytond(app, config)
+            modules = app.trytond.get_modules(domain)
     except Exception as err:
         modules = []
         logger.warning(

@@ -5,7 +5,7 @@ from functools import lru_cache
 from os import environ
 from proteus import Model, Wizard, config as proteus_config
 from sphinx.util import logging
-from urllib.parse import urlparse, quote
+from urllib.parse import quote
 
 logger = logging.getLogger(__name__)
 
@@ -234,5 +234,10 @@ def trytond_config_values(config):
     return values
 
 
-def initialise_trytond(app, env, docnames):
-    env.trytond = Trytond(**trytond_config_values(app.config))
+def initialise_trytond(app, config):
+    if not getattr(app, 'trytond', None):
+        app.trytond = Trytond(**trytond_config_values(config))
+
+
+def setup_env(app, env, docnames):
+    env.trytond = app.trytond
