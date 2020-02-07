@@ -7,6 +7,9 @@ from proteus import Model, Wizard, config as proteus_config
 from sphinx.util import logging
 from urllib.parse import quote
 
+from .exception import (
+    DatabaseAlreadyExistsError, DatabaseInitialisationFailedError)
+
 logger = logging.getLogger(__name__)
 
 
@@ -22,50 +25,52 @@ class Trytond(object):
                     err=repr(err)))
 
     def _init_trytond_connection(self, user, config_file, database=':memory:',
-                                 modules=None, **kwargs):
-        if modules is not None:
-            environ['DB_NAME'] = database
-            from trytond.tests.test_tryton import db_exist, create_db
-
-            if db_exist(database):
-                modules = None
-                logger.warning(
-                    "database already exists - skipping module activation")
-            else:
-                create_db(database)
-
+                                 **kwargs):
         proteus_config.set_trytond(
             database=database,
             user=user,
             config_file=config_file)
 
-        if modules:
-            Module = Model.get('ir.module')
-            records = Module.find([('name', 'in', modules)])
-
-            missing_modules = set(modules) - set([r.name for r in records])
-            if missing_modules:
-                logger.warning(
-                    "some trytond modules are not available for "
-                    "activation: {missing_modules}".format(
-                        missing_modules=missing_modules))
-
-            for record in records:
-                record.click('activate')
-            Wizard('ir.module.activate_upgrade').execute('upgrade')
-
     def _init_xmlrpc_connection(self, host, user, password, database='tryton',
-                                ssl_context=None, port=8000, modules=None,
-                                **kwargs):
-        if modules is not None:
-            raise ValueError(
-                "cannot create a database and activate modules over an "
-                "xmlrpc connection: {modules}".format(modules=modules))
+                                ssl_context=None, port=8000, **kwargs):
         proteus_config.set_xmlrpc(
             url='http://{user}:{password}@{host}:{port}/{database}/'.format(
                 user=quote(user), password=quote(password), host=host,
                 port=int(port), database=quote(database)),
             context=ssl_context)
+
+    @classmethod
+    def initialise_database(cls, database):
+        environ['DB_NAME'] = database
+
+        try:
+            from trytond.tests.test_tryton import db_exist, create_db
+        except ImportError as err:
+            raise DatabaseInitialisationFailedError(err.msg)
+
+        if db_exist(database):
+            raise DatabaseAlreadyExistsError
+
+        try:
+            create_db(database)
+        except Exception as err:
+            raise DatabaseInitialisationFailedError(err.msg)
+
+    def activate_modules(self, activate_modules):
+        Module = Model.get('ir.module')
+        available_modules = Module.find([('name', 'in', activate_modules)])
+
+        missing_modules = (
+            set(activate_modules) - set([m.name for m in available_modules]))
+        if missing_modules:
+            logger.warning(
+                "some trytond modules are not available for "
+                "activation: {missing_modules}".format(
+                    missing_modules=missing_modules))
+
+        for module in available_modules:
+            module.click('activate')
+        Wizard('ir.module.activate_upgrade').execute('upgrade')
 
     def get_modules(self, domain):
         Module = Model.get('ir.module')
@@ -211,7 +216,7 @@ _config_options = [
     ('config_file', None),
     ('database', None),
     ('host', None),
-    ('modules', None),
+    ('activate_modules', None),
     ('password', None),
     ('port', 8000),
     ('ssl_context', None),
@@ -235,8 +240,28 @@ def trytond_config_values(config):
 
 
 def initialise_trytond(app, config):
-    if not getattr(app, 'trytond', None):
-        app.trytond = Trytond(**trytond_config_values(config))
+    if getattr(app, 'trytond', None):
+        return
+
+    trytond_config = trytond_config_values(config)
+    activate_modules = trytond_config.get('activate_modules')
+    if activate_modules is not None:
+        try:
+            Trytond.initialise_database(trytond_config['database'])
+        except DatabaseAlreadyExistsError:
+            activate_modules = None
+            logger.warning(
+                "database already exists - skipping module activation")
+        except DatabaseInitialisationFailedError as err:
+            activate_modules = None
+            logger.warning(
+                "database could not be created: {} - "
+                "skipping module activation".format(err.msg))
+
+    app.trytond = Trytond(**trytond_config)
+
+    if activate_modules:
+        app.trytond.activate_modules(activate_modules)
 
 
 def setup_env(app, env, docnames):

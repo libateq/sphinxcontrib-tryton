@@ -9,3 +9,15 @@ class ClientError(Exception):
 
 class ClientTimeoutError(ClientError):
     pass
+
+
+class TrytondError(Exception):
+    pass
+
+
+class DatabaseAlreadyExistsError(TrytondError):
+    pass
+
+
+class DatabaseInitialisationFailedError(TrytondError):
+    pass

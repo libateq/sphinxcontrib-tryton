@@ -20,7 +20,7 @@ except ImportError:
 
 def with_trytond_app(modules=[]):
     return with_app(
-        confoverrides={'trytond_modules': modules},
+        confoverrides={'trytond_activate_modules': modules},
         srcdir='test/doc/basic/',
         warningiserror=True,
         write_docstring=True)
@@ -91,7 +91,7 @@ class TestTrytondDatabase(TestCase):
     @skipIf(trytond is None, "trytond package is not available")
     @with_app(
         srcdir='test/doc/basic/',
-        confoverrides={'trytond_modules': [
+        confoverrides={'trytond_activate_modules': [
             'account_credit_limit', 'sale_stock_quantity', 'stock_lot_sled']})
     def test_trytond_inherit_modules(self, app, status, warning):
         "Test the module inheritance list."
@@ -123,7 +123,7 @@ class TestTrytondInit(TestCase):
         "Test proteus.config.set_trytond is called correctly."
         Trytond(
             connection_type='trytond', config_file='config_file',
-            database='database', modules=None, user='user')
+            database='database', user='user')
 
         self.proteus_config.set_trytond.assert_called_once_with(
             config_file='config_file', database='database', user='user')
@@ -131,7 +131,7 @@ class TestTrytondInit(TestCase):
     def test_xmlrpc_config(self):
         "Test proteus.config.set_xmlrpc is called correctly."
         Trytond(
-            connection_type='xmlrpc', modules=None, database='database',
+            connection_type='xmlrpc', database='database',
             host='url.to.tryton', port=8000, user='user', password='passwd',
             ssl_context='ssl_context')
 
@@ -146,7 +146,7 @@ class TestTrytondGetRecord(TestCase):
         with patch('sphinxcontrib.tryton.trytond.proteus_config'):
             self.trytond = Trytond(
                 connection_type='trytond', config_file='config_file',
-                database='database', modules=None, user='user')
+                database='database', user='user')
 
         trytond_model_patcher = patch('sphinxcontrib.tryton.trytond.Model')
         self.Model = trytond_model_patcher.start()
@@ -191,7 +191,7 @@ class TestTrytondGetProperty(TestCase):
         with patch('sphinxcontrib.tryton.trytond.proteus_config'):
             self.trytond = Trytond(
                 connection_type='trytond', config_file='config_file',
-                database='database', modules=None, user='user')
+                database='database', user='user')
 
         get_record_patcher = patch.object(
             self.trytond, 'get_record', self._get_record)
@@ -260,7 +260,7 @@ class TestTrytondGetOther(TestCase):
         with patch('sphinxcontrib.tryton.trytond.proteus_config'):
             self.trytond = Trytond(
                 connection_type='trytond', config_file='config_file',
-                database='database', modules=None, user='user')
+                database='database', user='user')
 
     def test_get_main_menu_item_path(self):
         "Test get_main_menu_item_path returns a list of record ids."

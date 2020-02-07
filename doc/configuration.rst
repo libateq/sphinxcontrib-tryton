@@ -72,7 +72,7 @@ servers.
 
         .. _`Tryton Documentation`: https://docs.tryton.org/projects/server/en/latest/topics/configuration.html
 
-**trytond_modules**
+**trytond_activate_modules**
     A list of modules that should be activated in a new database.  If this
     option is provided then the database (which must already exist) is
     initialised, and the modules in this list are activated.  No module
