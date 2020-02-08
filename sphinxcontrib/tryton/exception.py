@@ -7,7 +7,15 @@ class ClientError(Exception):
     pass
 
 
+class ClientLoginError(ClientError):
+    pass
+
+
 class ClientTimeoutError(ClientError):
+    pass
+
+
+class ClientWebDriverError(ClientError):
     pass
 
 
@@ -20,4 +28,8 @@ class DatabaseAlreadyExistsError(TrytondError):
 
 
 class DatabaseInitialisationFailedError(TrytondError):
+    pass
+
+
+class RecordNotFoundError(TrytondError):
     pass

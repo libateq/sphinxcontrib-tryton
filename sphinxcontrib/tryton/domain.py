@@ -19,6 +19,7 @@ from tempfile import mkdtemp
 from time import sleep
 
 from .client import Area, Client
+from .exception import RecordNotFoundError
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +83,7 @@ class TrytonXRefRole(XRefRole):
 
         try:
             title = self.env.trytond.get_property(type_, target, property)
-        except ValueError:
+        except RecordNotFoundError:
             title = None
         if not title:
             title = text

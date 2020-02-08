@@ -9,7 +9,8 @@ from urllib.parse import quote
 from warnings import catch_warnings, filterwarnings
 
 from .exception import (
-    DatabaseAlreadyExistsError, DatabaseInitialisationFailedError)
+    DatabaseAlreadyExistsError, DatabaseInitialisationFailedError,
+    RecordNotFoundError)
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +35,8 @@ class Trytond(object):
             method(**kwargs)
         except Exception as err:
             logger.warning(
-                "could not connect to Trytond server: {err}".format(
-                    err=repr(err)))
+                "could not connect to Trytond server: {error}".format(
+                    error=repr(err)))
 
     def _init_trytond_connection(self, user, config_file, database=':memory:',
                                  **kwargs):
@@ -75,7 +76,7 @@ class Trytond(object):
         try:
             from trytond.tests.test_tryton import db_exist, create_db
         except ImportError as err:
-            raise DatabaseInitialisationFailedError(err.msg)
+            raise DatabaseInitialisationFailedError from err
 
         if db_exist(database):
             raise DatabaseAlreadyExistsError
@@ -85,7 +86,7 @@ class Trytond(object):
                 filterwarnings(action='ignore', module=r'trytond.*sqlite.*')
                 create_db(database)
         except Exception as err:
-            raise DatabaseInitialisationFailedError(err.msg)
+            raise DatabaseInitialisationFailedError from err
 
     def activate_modules(self, activate_modules):
         Module = Model.get('ir.module')
@@ -134,9 +135,8 @@ class Trytond(object):
         try:
             RecordModel = Model.get(model_name)
         except Exception as err:
-            raise ValueError(
-                "model '{model}' not found: {err}".format(
-                    model=model_name, err=repr(err)))
+            raise RecordNotFoundError(
+                "model '{model}' not found".format(model=model_name)) from err
 
         if id is not None:
             return RecordModel(id)
@@ -226,9 +226,10 @@ class Trytond(object):
             RecordModel = Model.get(model_name)
             selection = RecordModel._fields[field_name]['selection']
         except Exception as err:
-            raise ValueError(
-                "field '{model}.{field}' not found: {err}".format(
-                    model=model_name, field=field_name, err=repr(err)))
+            raise RecordNotFoundError(
+                "field '{model}.{field}' not found".format(
+                    model=model_name, field=field_name)) from err
+
         field = self._get_property_field(
             '{model}.{field}'.format(model=model_name, field=field_name))
 
@@ -258,8 +259,8 @@ def initialise_trytond(app, config):
         except DatabaseInitialisationFailedError as err:
             activate_modules = None
             logger.warning(
-                "database could not be created: {} - "
-                "skipping module activation".format(err.msg))
+                "database could not be created: {error} - "
+                "skipping module activation".format(error=repr(err)))
 
     app.trytond = Trytond(**trytond_config)
 

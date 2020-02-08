@@ -9,7 +9,7 @@ from types import MethodType
 from urllib.parse import quote
 
 from .client import Area, AsyncClient, Client, ClientApplyMethod, Size
-from .exception import ClientError, ClientTimeoutError
+from .exception import ClientLoginError, ClientTimeoutError
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class ClientTryton(Client):
 
             wait_for_gtk_main_loop()
             if not self.client.is_alive():
-                raise ClientError("login failed")
+                raise ClientLoginError
 
         except Exception as err:
             logger.warning(
@@ -164,10 +164,7 @@ class Tryton(Thread, AsyncClient):
                 try:
                     func(tryton_login_parameters)
                 except Exception as err:
-                    raise ValueError(
-                        "tryton client login failed: {err}".format(
-                            err=repr(err)))
-
+                    raise ClientLoginError from err
         tryton.common.Login = LoginPatch
 
     def apply_patch_config(self, tryton):

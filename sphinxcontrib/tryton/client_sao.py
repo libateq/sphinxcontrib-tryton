@@ -6,7 +6,7 @@ from sphinx.util import logging
 from urllib.parse import quote
 
 from .client import Area, AsyncClient, Client, Size
-from .exception import ClientError
+from .exception import ClientLoginError, ClientWebDriverError
 
 try:
     from PIL import Image
@@ -71,16 +71,16 @@ class ClientSao(Client, AsyncClient):
 
     def get_webdriver(self, browser):
         if Image is None:
-            raise ImportError("pillow not available")
+            raise ClientWebDriverError("pillow not available")
 
         if webdriver is None:
-            raise ImportError("selenium webdriver not available")
+            raise ClientWebDriverError("selenium webdriver not available")
 
         if not browser:
-            raise ValueError("no browser specified")
+            raise ClientWebDriverError("no browser specified")
 
         if browser.title() not in SUPPORTED_BROWSERS:
-            raise ValueError(
+            raise ClientWebDriverError(
                 "{browser} browser not supported".format(
                     browser=browser.title()))
 
@@ -93,7 +93,7 @@ class ClientSao(Client, AsyncClient):
         database = self.browser.get_database_field()
         if database.get_attribute('readonly') is not None:
             if database.get_attribute('value') != self.database:
-                raise ClientError('database not available')
+                raise ClientLoginError('database not available')
         else:
             Select(database).select_by_visible_text(self.database)
 
