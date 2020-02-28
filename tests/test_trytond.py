@@ -21,7 +21,7 @@ except ImportError:
 def with_trytond_app(modules=[]):
     return with_app(
         confoverrides={'trytond_activate_modules': modules},
-        srcdir='test/doc/basic/',
+        srcdir='tests/doc/basic/',
         warningiserror=True,
         write_docstring=True)
 
@@ -90,7 +90,7 @@ class TestTrytondDatabase(TestCase):
 
     @skipIf(trytond is None, "trytond package is not available")
     @with_app(
-        srcdir='test/doc/basic/',
+        srcdir='tests/doc/basic/',
         confoverrides={'trytond_activate_modules': [
             'account_credit_limit', 'sale_stock_quantity', 'stock_lot_sled']})
     def test_trytond_inherit_modules(self, app, status, warning):

@@ -12,7 +12,7 @@ def with_basic_app(*args, **kwargs):
     kwargs.pop('srcdir', None)
     kwargs.pop('warningiserror', None)
     return with_app(
-        srcdir='test/doc/basic/', warningiserror=True, *args, **kwargs)
+        srcdir='tests/doc/basic/', warningiserror=True, *args, **kwargs)
 
 
 class MockTrytond(object):

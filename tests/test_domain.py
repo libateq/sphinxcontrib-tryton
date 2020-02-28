@@ -10,7 +10,7 @@ from sphinxcontrib.tryton.trytond import Trytond
 
 def with_basic_app(warnings=''):
     return with_app(
-        srcdir='test/doc/basic/',
+        srcdir='tests/doc/basic/',
         warningiserror=(warnings != 'allow-warnings'),
         write_docstring=True)
 

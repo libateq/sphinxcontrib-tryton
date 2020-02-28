@@ -3,4 +3,6 @@ include COPYRIGHT
 include LICENSE
 include README.rst
 include doc/*
-include test/doc/*
+include tox.ini
+
+recursive-include tests *

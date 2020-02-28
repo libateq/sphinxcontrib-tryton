@@ -1,0 +1,47 @@
+---
+kind: pipeline
+type: docker
+name: python3.8
+
+steps:
+  - name: tox
+    image: python:3.8
+    commands:
+      - pip install tox
+      - tox -e "py38"
+
+---
+kind: pipeline
+type: docker
+name: python3.7
+
+steps:
+  - name: tox
+    image: python:3.7
+    commands:
+      - pip install tox
+      - tox -e "py37"
+
+---
+kind: pipeline
+type: docker
+name: python3.6
+
+steps:
+  - name: tox
+    image: python:3.6
+    commands:
+      - pip install tox
+      - tox -e "py36"
+
+---
+kind: pipeline
+type: docker
+name: python3.5
+
+steps:
+  - name: tox
+    image: python:3.5
+    commands:
+      - pip install tox
+      - tox -e "py35"

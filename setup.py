@@ -56,7 +56,7 @@ setup(
     ],
     license='GPL-3',
     platforms='any',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests']),
     namespace_packages=['sphinxcontrib'],
     include_package_data=True,
     python_requires='>=3.5',
@@ -85,8 +85,5 @@ setup(
     #         'trytond_stock_lot_sled>=5.0.0',
     #     ],
     # },
-    tests_require=[
-        'sphinx-testing>=1.0.1',
-    ],
     zip_safe=False,
 )
