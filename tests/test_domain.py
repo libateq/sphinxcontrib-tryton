@@ -42,9 +42,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<dl class="button">\s*'
-            '<dt id="model.name.button_name">\s*'
-            '<code class="[^"]*descname[^"]*">Model.Name.Button_Name')
+            r'<dl class="button">\s*'
+            r'<dt id="model.name.button_name">\s*'
+            r'<code class="[^"]*descname[^"]*">Model.Name.Button_Name')
 
     @with_basic_app()
     def test_directive_data(self, app, status, warning):
@@ -53,9 +53,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<dl class="data">\s*'
-            '<dt id="module.xml_id">\s*'
-            '<code class="[^"]*descname[^"]*">Module.Xml_Id')
+            r'<dl class="data">\s*'
+            r'<dt id="module.xml_id">\s*'
+            r'<code class="[^"]*descname[^"]*">Module.Xml_Id')
 
     @with_basic_app()
     def test_directive_field(self, app, status, warning):
@@ -64,9 +64,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<dl class="field">\s*'
-            '<dt id="model.name.field_name">\s*'
-            '<code class="[^"]*descname[^"]*">Model.Name.Field_Name')
+            r'<dl class="field">\s*'
+            r'<dt id="model.name.field_name">\s*'
+            r'<code class="[^"]*descname[^"]*">Model.Name.Field_Name')
 
     @with_basic_app('allow-warnings')
     def test_directive_figure(self, app, status, warning):
@@ -76,11 +76,11 @@ class TestTrytonDomain(TestCase):
         app.builder.build_all()
         self.assertRegex(
             warning.getvalue(),
-            "WARNING: client 'NoneType' is not available - "
-            "image could not be created")
+            r'WARNING: client \'NoneType\' is not available - '
+            r'image could not be created')
         self.assertRegex(
             warning.getvalue(),
-            "WARNING: image file not readable:")
+            r'WARNING: image file not readable:')
 
     @with_basic_app()
     def test_directive_menu(self, app, status, warning):
@@ -89,9 +89,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<dl class="menu">\s*'
-            '<dt id="module.xml_id">\s*'
-            '<code class="[^"]*descname[^"]*">Module.Xml_Id')
+            r'<dl class="menu">\s*'
+            r'<dt id="module.xml_id">\s*'
+            r'<code class="[^"]*descname[^"]*">Module.Xml_Id')
 
     @with_basic_app()
     def test_directive_model(self, app, status, warning):
@@ -100,9 +100,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<dl class="model">\s*'
-            '<dt id="model.name">\s*'
-            '<code class="[^"]*descname[^"]*">Model.Name')
+            r'<dl class="model">\s*'
+            r'<dt id="model.name">\s*'
+            r'<code class="[^"]*descname[^"]*">Model.Name')
 
     @with_basic_app()
     def test_directive_option(self, app, status, warning):
@@ -111,10 +111,10 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<dl class="option">\s*'
-            '<dt id="model.name.field_name.option_name">\s*'
-            '<code class="[^"]*descname[^"]*">'
-            'Model.Name.Field_Name.Option_Name')
+            r'<dl class="option">\s*'
+            r'<dt id="model.name.field_name.option_name">\s*'
+            r'<code class="[^"]*descname[^"]*">'
+            r'Model.Name.Field_Name.Option_Name')
 
     @with_basic_app('allow-warnings')
     def test_directive_view(self, app, status, warning):
@@ -124,11 +124,11 @@ class TestTrytonDomain(TestCase):
         app.builder.build_all()
         self.assertRegex(
             warning.getvalue(),
-            "WARNING: client 'NoneType' is not available - "
-            "image could not be created")
+            r'WARNING: client \'NoneType\' is not available - '
+            r'image could not be created')
         self.assertRegex(
             warning.getvalue(),
-            "WARNING: image file not readable:")
+            r'WARNING: image file not readable:')
 
     @with_basic_app()
     def test_directive_wizard(self, app, status, warning):
@@ -137,9 +137,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<dl class="wizard">\s*'
-            '<dt id="wizard.wiz_name">\s*'
-            '<code class="[^"]*descname[^"]*">Wizard.Wiz_Name')
+            r'<dl class="wizard">\s*'
+            r'<dt id="wizard.wiz_name">\s*'
+            r'<code class="[^"]*descname[^"]*">Wizard.Wiz_Name')
 
     @with_basic_app()
     def test_role_button(self, app, status, warning):
@@ -148,9 +148,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-button[^"]*">'
-            '<span class="pre">Model.Name.Button_Name</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-button[^"]*">'
+            r'<span class="pre">Model.Name.Button_Name</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_role_data(self, app, status, warning):
@@ -159,9 +159,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-data[^"]*">'
-            '<span class="pre">Module.Xml_Id</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-data[^"]*">'
+            r'<span class="pre">Module.Xml_Id</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_role_field(self, app, status, warning):
@@ -170,9 +170,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-field[^"]*">'
-            '<span class="pre">Model.Name.Field_Name</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-field[^"]*">'
+            r'<span class="pre">Model.Name.Field_Name</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_role_menu(self, app, status, warning):
@@ -181,9 +181,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-menu[^"]*">'
-            '<span class="pre">Module.Xml_Id</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-menu[^"]*">'
+            r'<span class="pre">Module.Xml_Id</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_role_model(self, app, status, warning):
@@ -192,9 +192,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-model[^"]*">'
-            '<span class="pre">Model.Name</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-model[^"]*">'
+            r'<span class="pre">Model.Name</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_role_option(self, app, status, warning):
@@ -203,9 +203,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-option[^"]*">'
-            '<span class="pre">Model.Name.Field_Name.Option_Name</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-option[^"]*">'
+            r'<span class="pre">Model.Name.Field_Name.Option_Name</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_role_toolbar(self, app, status, warning):
@@ -214,7 +214,7 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            'Tryton toolbar <(em|code[^>]*)>New</(em|code)>.')
+            r'Tryton toolbar <(em|code[^>]*)>New</(em|code)>.')
 
     @with_basic_app()
     def test_role_wizard(self, app, status, warning):
@@ -223,9 +223,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-wizard[^"]*">'
-            '<span class="pre">Wizard.Wiz_Name</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-wizard[^"]*">'
+            r'<span class="pre">Wizard.Wiz_Name</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_role_explicit_title(self, app, status, warning):
@@ -234,9 +234,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-model[^"]*">'
-            '<span class="pre">Explicit</span> <span class="pre">Title</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-model[^"]*">'
+            r'<span class="pre">Explicit</span> <span class="pre">Title</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_role_alternate_property(self, app, status, warning):
@@ -245,9 +245,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-model[^"]*">'
-            '<span class="pre">Different_Property</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-model[^"]*">'
+            r'<span class="pre">Different_Property</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_role_last_component_only(self, app, status, warning):
@@ -256,9 +256,9 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-field[^"]*">'
-            '<span class="pre">Field_Name</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-field[^"]*">'
+            r'<span class="pre">Field_Name</span>'
+            r'</code>.')
 
     @with_basic_app()
     def test_reference_model(self, app, status, warning):
@@ -271,11 +271,11 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<a class="headerlink" href="#model.name" title="[^"]*">')
+            r'<a class="headerlink" href="#model.name" title="[^"]*">')
         self.assertRegex(
             source,
-            '<a class="reference internal" href="#model.name"'
-            ' title="model.name">')
+            r'<a class="reference internal" href="#model.name"'
+            r' title="model.name">')
 
     @with_basic_app()
     def test_reference_field(self, app, status, warning):
@@ -288,12 +288,12 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<a class="headerlink" href="#model.name.field_name"'
-            ' title="[^"]*">')
+            r'<a class="headerlink" href="#model.name.field_name"'
+            r' title="[^"]*">')
         self.assertRegex(
             source,
-            '<a class="reference internal" href="#model.name.field_name"'
-            ' title="model.name.field_name">')
+            r'<a class="reference internal" href="#model.name.field_name"'
+            r' title="model.name.field_name">')
 
     @with_basic_app()
     def test_reference_data(self, app, status, warning):
@@ -306,11 +306,11 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<a class="headerlink" href="#module.xml_id" title="[^"]*">')
+            r'<a class="headerlink" href="#module.xml_id" title="[^"]*">')
         self.assertRegex(
             source,
-            '<a class="reference internal" href="#module.xml_id"'
-            ' title="module.xml_id">')
+            r'<a class="reference internal" href="#module.xml_id"'
+            r' title="module.xml_id">')
 
     @with_basic_app()
     def test_reference_menu(self, app, status, warning):
@@ -323,8 +323,8 @@ class TestTrytonDomain(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<a class="headerlink" href="#module.xml_id" title="[^"]*">')
+            r'<a class="headerlink" href="#module.xml_id" title="[^"]*">')
         self.assertRegex(
             source,
-            '<a class="reference internal" href="#module.xml_id"'
-            ' title="module.xml_id">')
+            r'<a class="reference internal" href="#module.xml_id"'
+            r' title="module.xml_id">')

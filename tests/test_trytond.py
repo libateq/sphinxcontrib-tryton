@@ -42,9 +42,9 @@ class TestTrytondDatabase(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<dl class="model">\s*'
-            '<dt id="ir.module">\s*'
-            '<code class="[^"]*descname[^"]*">Module')
+            r'<dl class="model">\s*'
+            r'<dt id="ir.module">\s*'
+            r'<code class="[^"]*descname[^"]*">Module')
 
     @skipIf(trytond is None, "trytond package is not available")
     @with_trytond_app()
@@ -54,9 +54,9 @@ class TestTrytondDatabase(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<code class="xref tryton tryton-field[^"]*">'
-            '<span class="pre">Module.Name</span>'
-            '</code>.')
+            r'<code class="xref tryton tryton-field[^"]*">'
+            r'<span class="pre">Module.Name</span>'
+            r'</code>.')
 
     @skipIf(trytond is None, "trytond package is not available")
     @with_trytond_app()
@@ -70,11 +70,11 @@ class TestTrytondDatabase(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<a class="headerlink" href="#ir.menu_modules" title="[^"]*">')
+            r'<a class="headerlink" href="#ir.menu_modules" title="[^"]*">')
         self.assertRegex(
             source,
-            '<a class="reference internal" href="#ir.menu_modules"'
-            ' title="ir.menu_modules">')
+            r'<a class="reference internal" href="#ir.menu_modules"'
+            r' title="ir.menu_modules">')
 
     @skipIf(currency is None, "currency module is not available")
     @with_trytond_app(['currency'])
@@ -84,9 +84,9 @@ class TestTrytondDatabase(TestCase):
         source = (app.outdir / 'index.html').read_text(encoding='utf-8')
         self.assertRegex(
             source,
-            '<dl class="model">\s*'
-            '<dt id="currency.currency">\s*'
-            '<code class="[^"]*descname[^"]*">Currency')
+            r'<dl class="model">\s*'
+            r'<dt id="currency.currency">\s*'
+            r'<code class="[^"]*descname[^"]*">Currency')
 
     @skipIf(trytond is None, "trytond package is not available")
     @with_app(
